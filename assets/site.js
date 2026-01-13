@@ -7,6 +7,7 @@
   });
 })();
 
+
 // Title randomizer + conditional video swap (Home page)
 (() => {
   const headline = document.getElementById("headline");
@@ -55,7 +56,6 @@
 })();
 
 
-
 // Sound toggle (Home page)
 (() => {
   const video = document.getElementById("heroVideo");
@@ -78,3 +78,48 @@
     }
   });
 })();
+
+
+// Fullscreen photo viewer (Photos page)
+(() => {
+  const images = document.querySelectorAll(".photo-card img");
+  if (!images.length) return; // only run on photos page
+
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightboxImg");
+
+  if (!lightbox || !lightboxImg) {
+    console.warn("Lightbox elements missing");
+    return;
+  }
+
+  function open(src, alt) {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt || "";
+    lightbox.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function close() {
+    lightbox.classList.remove("open");
+    lightboxImg.src = "";
+    document.body.style.overflow = "";
+  }
+
+  images.forEach((img) => {
+    img.addEventListener("click", () => open(img.src, img.alt));
+  });
+
+  // Click away closes (clicking the dark background)
+  lightbox.addEventListener("click", close);
+
+  // Clicking the image itself should not close
+  lightboxImg.addEventListener("click", (e) => e.stopPropagation());
+
+  // Esc closes
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && lightbox.classList.contains("open")) close();
+  });
+
+})();
+
